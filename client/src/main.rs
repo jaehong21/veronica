@@ -5,28 +5,19 @@ use std::net::TcpStream;
 
 use structopt::StructOpt;
 
-use lib::File;
+use lib::{File, Json};
+use util::args;
 
-// const FILE_PATH: &str = "/Users/jaehong21/";
-const FILE_PATH: &str = "";
-const UPLOAD_SERVER_ADDRESS: &str = "127.0.0.1:8000";
-const DOWNLOAD_SERVER_ADDRESS: &str = "127.0.0.1:8080";
-
-#[derive(StructOpt, Debug)]
-pub struct Opt {
-    #[structopt(short,long, conflicts_with="download")]
-    pub upload: Option<String>,
-    #[structopt(short, long, conflicts_with="upload")]
-    pub download: Option<String>,
-}
+mod util;
 
 fn main() {
-    // const CLIENT_ADDRESS: &str = "127.0.0.1:50000";
+    let args = args::Opt::from_args();
+    let file_path = args::file_path(&args.path);
+    let (upload_addr, download_addr) = args::host(&args.host);
 
-    let args = Opt::from_args();
     match args {
         _ if(args.upload != None) => {
-            match TcpStream::connect(UPLOAD_SERVER_ADDRESS) {
+            match TcpStream::connect(upload_addr) {
                 Ok(stream) => {
                     upload_file(stream, args.upload.unwrap());
                 }
@@ -36,7 +27,7 @@ fn main() {
             };
         },
         _ if(args.download != None) => {
-            match TcpStream::connect(DOWNLOAD_SERVER_ADDRESS) {
+            match TcpStream::connect(download_addr) {
                 Ok(mut stream) => {
                     let file_name: String = args.download.unwrap();
                     stream.write(file_name.as_bytes()).unwrap();
@@ -49,8 +40,8 @@ fn main() {
                         Err(_) => None
                     };
                     if let Some(file) = file {
-                        let mut file_name = String::from(FILE_PATH);
-                        file_name.push_str(&file.name[..]);
+                        let mut file_name = String::from(file_path);
+                        file_name.push_str(&file.name);
                         println!("{}", file_name);
                         match std::fs::write(file_name, file.content) {
                             Ok(_) => {},

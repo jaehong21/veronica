@@ -23,8 +23,12 @@ impl File {
         };
         File { name: file_name.to_str().unwrap().to_string(), content }
     }
+}
 
-    pub fn json_encode(&self) -> Vec<u8> {
+impl Json for File {}
+
+pub trait Json {
+    fn json_encode(&self) -> Vec<u8> where Self: Serialize {
         let result = serde_json::to_vec(&self);
         match result {
             Ok(result) => result,
