@@ -3,7 +3,8 @@ use std::net::{Shutdown, TcpListener, TcpStream};
 use std::thread;
 use::serde_json;
 
-use veronica_server::{File};
+extern crate lib;
+use lib::File;
 
 const FILE_NAME_MAX_LEN: usize = 216;
 const FILE_PATH: &str = "data/";

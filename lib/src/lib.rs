@@ -1,6 +1,7 @@
 use std::ffi::OsStr;
 use std::fs;
 use std::path::Path;
+
 use serde::{Deserialize, Serialize};
 use serde_json;
 
@@ -8,12 +9,6 @@ use serde_json;
 pub struct File {
     pub name: String,
     pub content: Vec<u8>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Client {
-    pub address: String,
-    pub file_name: String,
 }
 
 impl File {
@@ -29,16 +24,6 @@ impl File {
         File { name: file_name.to_str().unwrap().to_string(), content }
     }
 
-    pub fn json_encode(&self) -> Vec<u8> {
-        let result = serde_json::to_vec(&self);
-        match result {
-            Ok(result) => result,
-            Err(err) => panic!("{}", err.to_string()),
-        }
-    }
-}
-
-impl Client {
     pub fn json_encode(&self) -> Vec<u8> {
         let result = serde_json::to_vec(&self);
         match result {

@@ -1,8 +1,11 @@
+extern crate lib;
+
 use std::io::{Read, Write};
-use std::net::{TcpStream};
+use std::net::TcpStream;
+
 use structopt::StructOpt;
 
-use veronica::File;
+use lib::File;
 
 // const FILE_PATH: &str = "/Users/jaehong21/";
 const FILE_PATH: &str = "";
