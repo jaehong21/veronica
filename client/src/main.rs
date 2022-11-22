@@ -13,6 +13,7 @@ mod util;
 fn main() {
     let args = args::Opt::from_args();
     let file_path = args::file_path(&args.path);
+
     let (upload_addr, download_addr) = args::host(&args.host);
 
     match args {
@@ -35,7 +36,7 @@ fn main() {
                     let mut buf: Vec<u8> = vec![];
                     stream.read_to_end(&mut buf).unwrap();
 
-                    let file: Option<File> = match serde_json::from_slice(&*buf) {
+                    let file: Option<File> = match serde_json::from_slice(&buf) {
                         Ok(file) => Some(file),
                         Err(_) => None
                     };
@@ -60,5 +61,5 @@ fn main() {
 
 fn upload_file(mut stream: TcpStream, file_name: String) {
     let file: File = File::from(file_name);
-    stream.write(&*file.json_encode()).unwrap();
+    stream.write(&file.json_encode()).unwrap();
 }

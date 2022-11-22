@@ -76,7 +76,7 @@ fn handle_download(mut stream: TcpStream, file_path: String) {
 
             let file: File = File::from(saved_path);
 
-            stream.write(&*file.json_encode()).unwrap();
+            stream.write(&file.json_encode()).unwrap();
             stream.flush().unwrap();
         },
         Err(_) => {
@@ -90,7 +90,7 @@ fn handle_upload(mut stream: TcpStream, file_path: String) {
     let mut buf: Vec<u8> = vec![];
     match stream.read_to_end(&mut buf) {
         Ok(_size) => {
-            let file: Option<File> = match serde_json::from_slice(&*buf) {
+            let file: Option<File> = match serde_json::from_slice(&buf) {
                 Ok(file) => Some(file),
                 Err(_) => None
             };
