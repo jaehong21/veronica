@@ -11,7 +11,7 @@ use lib::{File, Json};
 
 mod util;
 
-const FILE_NAME_MAX_LEN: usize = 216;
+const FILE_NAME_MAX_LEN: usize = 512;
 
 #[derive(StructOpt, Debug)]
 pub struct Opt {
